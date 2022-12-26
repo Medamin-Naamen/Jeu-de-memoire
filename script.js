@@ -1,3 +1,4 @@
+let used = [];
 function remplissage() {
   let t = [];
   let t1 = [];
@@ -42,6 +43,7 @@ function remplissage() {
   }
 }
 remplissage();
+
 const reseatvar = () => {
   click1 = null;
   click2 = null;
@@ -66,25 +68,32 @@ const letplay = () => {
   document.addEventListener("click", function (e) {
     switch (x) {
       case 1:
-        console.log(e.target.src);
-        console.log(u);
-        click1 = e.target.src;
-        u = e.target.id;
-        $(`#${u}`).removeClass("hidden");
-        //e.ClassList.remove("hidden");
-        x = 2;
-        break;
-      case 2:
-        if (e.target.id != u) {
-          click2 = e.target.src;
+        if (e.target.tagName == "IMG" && !used.includes(e.target.id)) {
+          console.log(e.target.tagName);
+          console.log(e.target.src);
+          console.log(u);
+          click1 = e.target.src;
+          u = e.target.id;
+          console.log(used);
+          $(`#${u}`).removeClass("hidden");
+          //e.ClassList.remove("hidden");
+          x = 2;
+          break;
+        }
 
+      case 2:
+        if (
+          e.target.tagName == "IMG" &&
+          e.target.id != u &&
+          !used.includes(e.target.id)
+        ) {
+          click2 = e.target.src;
+          console.log(used);
           w = e.target.id;
           console.log(click2, w);
           $(`#${w}`).removeClass("hidden");
+
           x = 3;
-          if (count == 8) {
-            $("button").removeClass("hidden");
-          }
         }
         break;
       case 3:
@@ -101,9 +110,15 @@ const letplay = () => {
         reseatvar();
       }, 100);
     } else {
+      used.unshift(u);
+      used.unshift(w);
       reseatvar();
+
       ++count;
       document.getElementById("span").innerHTML = `${count}/8`;
+      if (count == 8) {
+        $("button").removeClass("hidden");
+      }
     }
   }
 };
@@ -117,5 +132,6 @@ function repeat() {
     document.getElementById("span").innerHTML = "";
     $("button").addClass("hidden");
     letplay();
+    used = [];
   }
 }
